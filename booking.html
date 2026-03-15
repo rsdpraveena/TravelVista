@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Your Trip — TravelVista</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Book Your Trip</h1>
+    <p>Fill in your details to reserve your adventure</p>
+  </div>
+
+  <!-- Booking Form Section -->
+  <section class="booking-section">
+    <div class="container">
+      <div class="booking-card">
+        <!-- Success Message (shown after booking) -->
+        <div id="booking-success" style="display:none;background:var(--primary-light);border-radius:var(--radius-sm);margin-bottom:1.5rem;border:1px solid #b3e0e5;"></div>
+
+        <!-- Booking Form -->
+        <form id="booking-form" novalidate>
+          <div class="row g-3">
+            <!-- Customer Name -->
+            <div class="col-md-6">
+              <label class="form-label" for="cust-name">Customer Name</label>
+              <input type="text" class="form-control" id="cust-name" placeholder="Full name" required>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-6">
+              <label class="form-label" for="cust-email">Email</label>
+              <input type="email" class="form-control" id="cust-email" placeholder="your@email.com" required>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="col-md-6">
+              <label class="form-label" for="cust-phone">Phone Number</label>
+              <input type="tel" class="form-control" id="cust-phone" placeholder="10-digit mobile number" maxlength="10" required>
+            </div>
+
+            <!-- Number of Travelers -->
+            <div class="col-md-6">
+              <label class="form-label" for="num-travelers">Number of Travelers</label>
+              <input type="number" class="form-control" id="num-travelers" min="1" max="20" value="1" required>
+            </div>
+
+            <!-- Travel Date -->
+            <div class="col-md-6">
+              <label class="form-label" for="travel-date">Travel Date</label>
+              <input type="date" class="form-control" id="travel-date" required>
+            </div>
+
+            <!-- Tour Package Select -->
+            <div class="col-md-6">
+              <label class="form-label" for="tour-package">Tour Package</label>
+              <select class="form-select" id="tour-package" required>
+                <!-- Populated by packages.js -->
+              </select>
+            </div>
+
+            <!-- Price Preview -->
+            <div class="col-12">
+              <div id="price-preview" style="display:none;padding:1rem;background:var(--primary-light);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--primary);">
+                <i class="bi bi-calculator me-2"></i>
+                Estimated Total: <strong id="total-price">₹0</strong>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12 mt-2">
+              <button type="submit" class="btn-book">
+                <i class="bi bi-calendar-check me-2"></i> Confirm Booking
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment Options Section -->
+  <section class="payment-options-section" id="payment-options" style="display:none;">
+    <div class="container">
+      <div class="payment-card">
+        <h3>Complete Your Payment</h3>
+        <div class="payment-summary">
+          <div class="summary-row">
+            <span>Package:</span>
+            <strong id="payment-package-name">-</strong>
+          </div>
+          <div class="summary-row">
+            <span>Travelers:</span>
+            <strong id="payment-travelers">-</strong>
+          </div>
+          <div class="summary-row">
+            <span>Travel Date:</span>
+            <strong id="payment-date">-</strong>
+          </div>
+          <div class="summary-row total">
+            <span>Total Amount:</span>
+            <strong id="payment-amount">₹0</strong>
+          </div>
+        </div>
+        
+        <div class="payment-methods">
+          <h4>Select Payment Method</h4>
+          <div class="payment-grid">
+            <div class="payment-method" onclick="selectPaymentMethod('card')">
+              <i class="bi bi-credit-card"></i>
+              <span>Credit/Debit Card</span>
+            </div>
+            <div class="payment-method" onclick="selectPaymentMethod('upi')">
+              <i class="bi bi-phone"></i>
+              <span>UPI</span>
+            </div>
+            <div class="payment-method" onclick="selectPaymentMethod('netbanking')">
+              <i class="bi bi-bank"></i>
+              <span>Net Banking</span>
+            </div>
+            <div class="payment-method" onclick="selectPaymentMethod('wallet')">
+              <i class="bi bi-wallet2"></i>
+              <span>Wallet</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="payment-form" id="payment-form-container">
+          <!-- Card Payment Form -->
+          <div id="card-payment" class="payment-form-content">
+            <div class="row">
+              <div class="col-md-6">
+                <label>Card Number</label>
+                <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+              </div>
+              <div class="col-md-6">
+                <label>CVV</label>
+                <input type="text" placeholder="123" maxlength="3">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Expiry Date</label>
+                <input type="text" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="col-md-6">
+                <label>Cardholder Name</label>
+                <input type="text" placeholder="John Doe">
+              </div>
+            </div>
+          </div>
+          
+          <!-- UPI Payment Form -->
+          <div id="upi-payment" class="payment-form-content" style="display:none;">
+            <label>UPI ID</label>
+            <input type="text" placeholder="yourname@upi">
+          </div>
+          
+          <!-- Net Banking Form -->
+          <div id="netbanking-payment" class="payment-form-content" style="display:none;">
+            <label>Select Bank</label>
+            <select>
+              <option>Choose your bank</option>
+              <option>SBI</option>
+              <option>HDFC</option>
+              <option>ICICI</option>
+              <option>Axis Bank</option>
+            </select>
+          </div>
+          
+          <!-- Wallet Form -->
+          <div id="wallet-payment" class="payment-form-content" style="display:none;">
+            <label>Wallet Number</label>
+            <input type="text" placeholder="Enter wallet number">
+          </div>
+        </div>
+        
+        <div class="payment-actions">
+          <button class="btn-secondary" onclick="cancelPayment()">Cancel</button>
+          <button class="btn-primary-custom" onclick="processPayment()">
+            <i class="bi bi-lock-fill me-2"></i> Pay Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <strong>TravelVista</strong> &copy; 2026 — Your trusted travel partner across India.
+  </footer>
+
+  <div class="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="auth.js"></script>
+  <script src="navbar.js"></script>
+  <script src="packages.js"></script>
+  <script src="booking.js"></script>
+  <script>
+    const session = requireAuth();
+    if (session) {
+      injectNavbar('booking');
+      setupNavbar();
+      populatePackageSelect();
+      prefillUserDetails();
+      handleBooking();
+
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('travel-date').setAttribute('min', today);
+
+      // Live price calculator
+      function updatePrice() {
+        const pkgId = document.getElementById('tour-package').value;
+        const travelers = parseInt(document.getElementById('num-travelers').value) || 1;
+        const preview = document.getElementById('price-preview');
+        const totalEl = document.getElementById('total-price');
+        if (pkgId) {
+          const pkg = getPackageById(pkgId);
+          if (pkg) {
+            const total = pkg.price * travelers;
+            totalEl.textContent = '₹' + total.toLocaleString('en-IN');
+            preview.style.display = 'block';
+          }
+        } else {
+          preview.style.display = 'none';
+        }
+      }
+      document.getElementById('tour-package').addEventListener('change', updatePrice);
+      document.getElementById('num-travelers').addEventListener('input', updatePrice);
+      updatePrice(); // Trigger on load if pre-selected
+    }
+  </script>
+</body>
+</html>

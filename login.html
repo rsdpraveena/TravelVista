@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — TravelVista</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Auth Wrapper: Split layout with travel image on left -->
+  <div class="auth-wrapper">
+
+    <!-- Left: Hero Image with Quote -->
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <h2>Explore the World</h2>
+        <p>Discover breathtaking destinations and create<br>unforgettable memories with TravelVista.</p>
+      </div>
+    </div>
+
+    <!-- Right: Login Form -->
+    <div class="auth-right">
+      <!-- Logo -->
+      <div class="auth-logo">
+        <i class="bi bi-airplane-fill"></i> TravelVista
+      </div>
+
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-subtitle">Sign in to your account to continue</p>
+
+      <!-- Error Message (hidden by default) -->
+      <div class="alert-error" id="login-error">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        <span id="error-msg">Invalid credentials</span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" novalidate>
+        <!-- Email Field -->
+        <div class="mb-3">
+          <label class="form-label" for="email">Email</label>
+          <div class="input-wrapper">
+            <i class="bi bi-envelope input-icon"></i>
+            <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-4">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="bi bi-lock input-icon"></i>
+            <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-primary-custom w-100 justify-content-center" style="padding:0.85rem; margin-top: 0.5rem;">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Redirect to Register -->
+      <div class="auth-link">
+        Don't have an account? <a href="register.html">Sign up</a>
+      </div>
+
+      <!-- Demo credentials hint -->
+      <div class="demo-hint">
+        <strong>Demo:</strong> john@gmail.com / password123
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    // Redirect if already logged in
+    redirectIfLoggedIn();
+
+    // Handle login form submission
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const result   = loginUser(email, password);
+
+      if (result.success) {
+        window.location.href = 'index.html';
+      } else {
+        const errEl = document.getElementById('login-error');
+        document.getElementById('error-msg').textContent = result.message;
+        errEl.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
